@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: config-server-git-jdbc
+
+  profiles:
+    active: jdbc,git
+
+  cloud:
+    config:
+      server:
+        jdbc:
+          order: 0
+          sql: SELECT PROP_KEY, VALUE from PROPERTIES where APPLICATION=? and PROFILE=? and LABEL=?
+
+        git:
+          uri: <<URL>>
+          searchPaths: /**, sandbox/**, integration/**, qa/**, production/**
+          username:
+          password:
+          order: 1
+
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 5000
+      maximum-pool-size: 10
+    url: jdbc:mysql://localhost:3306/config_server
+    username: root
+    password: root
+
+server:
+  port: 8080
+  servlet:
+    context-path: /config
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
